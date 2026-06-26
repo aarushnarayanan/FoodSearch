@@ -4,8 +4,11 @@ import structlog
 from fastapi import FastAPI
 
 if os.environ.get("APP_ENV") != "production":
-    from dotenv import load_dotenv
-    load_dotenv()
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN"),
