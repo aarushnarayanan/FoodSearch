@@ -1,4 +1,5 @@
-name: CI/CD
+#only CI being done since CD done with Railway
+name: CI
 
 on:
   push:
@@ -25,23 +26,3 @@ jobs:
         run: |
           cd backend
           pytest tests/ -v
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Railway CLI
-        shell: bash
-        run: |
-          curl -fsSL https://railway.app/install.sh | bash
-          echo "$HOME/.railway/bin" >> "$GITHUB_PATH"
-
-      - name: Deploy to Railway
-        shell: bash
-        run: railway up --service FoodSearch --detach
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ secrets.RAILWAY_PROJECT_ID }}
