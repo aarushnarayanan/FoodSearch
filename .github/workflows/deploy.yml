@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
 
 jobs:
   test:
@@ -19,14 +19,24 @@ jobs:
         run: |
           cd backend
           pip install -r requirements.txt
-          pip install pytest httpx
+          pip install pytest
 
       - name: Run tests
         run: |
           cd backend
           pytest tests/ -v
-      - name: Install dependencies
-        run: |
-          cd backend
-          pip install -r requirements.txt
-          pip install pytest
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service FoodSearch
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
