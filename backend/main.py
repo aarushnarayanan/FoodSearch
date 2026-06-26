@@ -1,14 +1,15 @@
 import os
-import structlog
 import sentry_sdk
+import structlog
 from fastapi import FastAPI
-from dotenv import load_dotenv
 
-load_dotenv()
+if os.environ.get("APP_ENV") != "production":
+    from dotenv import load_dotenv
+    load_dotenv()
 
 sentry_sdk.init(
-    dsn = os.environ.get("SENTRY_DSN"),
-    traces_sample_rate = 0.1,
+    dsn=os.environ.get("SENTRY_DSN"),
+    traces_sample_rate=0.1,
 )
 
 log = structlog.get_logger()
