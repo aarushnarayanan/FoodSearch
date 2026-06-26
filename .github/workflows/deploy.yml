@@ -33,9 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Railway CLI
+        run: bash <(curl -fsSL cli.new/railway)
+
       - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
+        run: railway redeploy --service FoodSearch --yes
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        with:
-          service: FoodSearch
